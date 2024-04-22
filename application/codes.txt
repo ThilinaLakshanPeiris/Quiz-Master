@@ -1,0 +1,175 @@
+
+
+//===========================================================home page==========================================================
+
+<?php include 'includes/header.php';?>
+
+<?php 
+if ($this->session->flashdata('welcome')) {
+    echo "<h3>" . $this->session->flashdata('welcome') . "</h3>";
+}?>
+
+ <h1><?php echo "Welcome " . $this->session->userdata('fname');?> </h1>
+
+
+<?php include 'includes/footer.php'; ?>
+//===========================================================home page==========================================================
+
+//===========================================================create quiz=========================================================
+
+<?php include 'includes/header.php';?>
+
+<?php 
+if ($this->session->flashdata('welcome')) {
+    echo "<h3>" . $this->session->flashdata('welcome') . "</h3>";
+}?>
+
+ <h1><?php echo "Create Quiz page " . $this->session->userdata('fname');?> </h1>
+
+
+<?php include 'includes/footer.php'; ?>
+
+//===========================================================create quiz==========================================================
+
+<!-- createQuiz.php -->
+<?php include 'includes/header.php';?>
+
+<form action="#" method="post" id="quiz_form">
+    <label for="quiz_name">Quiz Name:</label>
+    <input type="text" id="quiz_name" name="quiz_name">
+  
+    <label for="quiz_category">Quiz Category:</label>
+    <select id="quiz_category" name="quiz_category">
+        <option value="Category1">Category 1</option>
+        <option value="Category2">Category 2</option>
+        <option value="Category3">Category 3</option>
+        <!-- Add more options as needed -->
+    </select>
+    <br><br>
+    <hr>
+    <div id="question-container"></div>
+    <button type="button" id="add_question">Add Question</button>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    // Initialize an array to store question objects
+    var questionsArray = [];
+
+    document.getElementById("add_question").addEventListener("click", function() {
+        var questionContainer = document.getElementById("question-container");
+        var questionFields = document.getElementsByClassName("question-field");
+
+        // Incrementing the question number
+        var questionNumber = questionFields.length + 1;
+
+        // Creating new question div
+        var newQuestionDiv = document.createElement("div");
+        newQuestionDiv.className = "question-field";
+        newQuestionDiv.id = "question-" + questionNumber;
+
+        // Constructing the inner HTML for the new question div
+        newQuestionDiv.innerHTML = `
+            <label for="question">Question ${questionNumber}:</label>
+            <input type="text" id="question_${questionNumber}" name="question_${questionNumber}">
+            <br>
+            <label>Answers:</label>
+            <div>
+                <label for="answer1_${questionNumber}">Answer 1:</label>
+                <input type="text" id="answer1_text_${questionNumber}" name="answer1_text_${questionNumber}">
+                <input type="checkbox" id="answer1_${questionNumber}" name="answer1_${questionNumber}">
+            </div>
+            <div>
+                <label for="answer2_${questionNumber}">Answer 2:</label>
+                <input type="text" id="answer2_text_${questionNumber}" name="answer2_text_${questionNumber}">
+                <input type="checkbox" id="answer2_${questionNumber}" name="answer2_${questionNumber}">
+            </div>
+            <div>
+                <label for="answer3_${questionNumber}">Answer 3:</label>
+                <input type="text" id="answer3_text_${questionNumber}" name="answer3_text_${questionNumber}">
+                <input type="checkbox" id="answer3_${questionNumber}" name="answer3_${questionNumber}">
+            </div>
+            <div>
+                <label for="answer4_${questionNumber}">Answer 4:</label>
+                <input type="text" id="answer4_text_${questionNumber}" name="answer4_text_${questionNumber}">
+                <input type="checkbox" id="answer4_${questionNumber}" name="answer4_${questionNumber}">
+            </div>
+            <br><hr>
+        `;
+
+        // Appending the new question div to the question container
+        questionContainer.appendChild(newQuestionDiv);
+    });
+
+    document.getElementById("quiz_form").addEventListener("submit", function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Get the quiz name and category
+        var quizName = document.getElementById("quiz_name").value;
+        var quizCategory = document.getElementById("quiz_category").value;
+
+        // Collect the values of the inputs and checkboxes and append them to the questions array
+        var questionFields = document.getElementsByClassName("question-field");
+        for (var i = 0; i < questionFields.length; i++) {
+            var questionNumber = i + 1;
+            var questionObj = {
+                question: document.getElementById(`question_${questionNumber}`).value,
+                answers: [
+                    {
+                        answer_text: document.getElementById(`answer1_text_${questionNumber}`).value,
+                        correct_answer: document.getElementById(`answer1_${questionNumber}`).checked
+                    },
+                    {
+                        answer_text: document.getElementById(`answer2_text_${questionNumber}`).value,
+                        correct_answer: document.getElementById(`answer2_${questionNumber}`).checked
+                    },
+                    {
+                        answer_text: document.getElementById(`answer3_text_${questionNumber}`).value,
+                        correct_answer: document.getElementById(`answer3_${questionNumber}`).checked
+                    },
+                    {
+                        answer_text: document.getElementById(`answer4_text_${questionNumber}`).value,
+                        correct_answer: document.getElementById(`answer4_${questionNumber}`).checked
+                    }
+                ]
+            };
+
+            questionsArray.push(questionObj);
+        }
+        
+        // Log the questionsArray to the console
+        console.log(questionsArray);
+
+        // Prepare the data to be sent
+        var formData = {
+            quiz_name: quizName,
+            quiz_category: quizCategory,
+            questions: questionsArray
+        };
+
+        // Log the formData object to the console
+        console.log(formData);
+
+        // Send the data to the backend API
+        fetch('url_to_your_api_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any other headers if needed
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success response from the server
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle error response from the server
+        });
+    });
+</script>
+
+<?php include 'includes/footer.php'; ?>
