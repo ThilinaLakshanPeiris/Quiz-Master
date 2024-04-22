@@ -1,6 +1,8 @@
 <!-- createQuiz.php -->
 <?php include 'includes/header.php'; ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <form action="#" method="post" id="quiz_form">
     <label for="quiz_name">Quiz Name:</label>
     <input type="text" id="quiz_name" name="quiz_name" required>
@@ -18,10 +20,6 @@
     <button type="button" id="add_question">Add Question</button>
     <input type="submit" value="Submit">
 </form>
-
-<?php include 'includes/footer.php'; ?>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -71,12 +69,6 @@
         $('#quiz_form').submit(function(event) {
             event.preventDefault(); // Prevent default form submission
 
-            // Confirm submission with an alert
-            var confirmed = confirm("Are you sure you want to submit the quiz?");
-            if (!confirmed) {
-                return false; // Cancel form submission if not confirmed
-            }
-
             // Create main object
             var quizData = {
                 quiz_name: $('#quiz_name').val(),
@@ -86,13 +78,14 @@
 
             // Loop through each question field
             $('.question-field').each(function() {
+                var questionText = $(this).find('input[type="text"]').first().val();
                 var questionObj = {
-                    question_text: $(this).find('input[type="text"]').first().val(),
+                    question_text: questionText,
                     answers: []
                 };
 
                 // Loop through each answer field within the question
-                $(this).find('input[type="text"]').each(function(index) {
+                $(this).find('input[type="text"]').not(':first').each(function(index) {
                     var answerText = $(this).val();
                     var answerCheckbox = $(this).siblings('input[type="checkbox"]').prop('checked');
                     var answerObj = {
@@ -124,4 +117,5 @@
 
     });
 </script>
- 
+
+<?php include 'includes/footer.php'; ?>

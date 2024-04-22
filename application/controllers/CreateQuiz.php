@@ -13,7 +13,7 @@ class CreateQuiz extends CI_Controller
     }
 
     public function index()
-    {
+    {   
         $this->load->view('createQuiz');
     }
 
@@ -64,22 +64,21 @@ class CreateQuiz extends CI_Controller
                 $questions = $jsonData['questions'];
 
                 // Insert quiz details into database
-                $category_id = $this->createQuizModel->insert_category($quizCategory);
+                $category_id = $this->createQuizModel->get_category_id($quizCategory);
 
                 if($category_id == false) {
                     echo "Error Fetching Quiz Details";
                 }
                 else {
                     echo json_encode($category_id);
-                }
+                    $quiz_id = $this->createQuizModel->insert_quiz($quizName, $category_id);
 
-                $quiz_id = $this->createQuizModel->insert_quiz($quizName, $category_id);
-
-                if($quiz_id == false) {
-                    echo "Error Fetching Quiz Details";
-                }
-                else {
-                    echo json_encode($quiz_id);
+                    if($quiz_id == false) {
+                        echo "Error Fetching Quiz Details";
+                    }
+                    else {
+                        echo json_encode($quiz_id);
+                    }
                 }
 
                 // echo json_encode($quizName);
@@ -87,6 +86,8 @@ class CreateQuiz extends CI_Controller
                 foreach ($questions as $question) {
                     $questionText = $question['question_text'];
                     $answers = $question['answers'];
+
+                    echo json_encode($answers);
 
                     $question_id = $this->createQuizModel->insert_question($quiz_id, $questionText);
 
