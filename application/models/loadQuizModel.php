@@ -23,4 +23,21 @@ class LoadQuizModel extends CI_Model
 
     }
 
+    public function get_user_quizzes($id) {
+
+        // $query = $this->db->get('quiz');
+        // return $query->result_array();  
+
+        $this->db->select('quiz.quizId, quiz.quiz_title, category.categoryText');
+        $this->db->from('quiz');
+        $this->db->join('category', 'quiz.categoryId = category.categoryId');
+        $this->db->where('quiz.id', $id);
+
+        // echo $this->db->get_compiled_select(); 
+
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
+
 }

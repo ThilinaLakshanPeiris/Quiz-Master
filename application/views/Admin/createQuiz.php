@@ -21,6 +21,11 @@
     <input type="submit" value="Submit">
 </form>
 
+<?php $user_id =  $this->session->userdata('user_id'); ?>
+<?php $user_id = (int)$user_id; ?>
+
+<input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+
 <script>
     $(document).ready(function() {
         var questionNumber = 0;
@@ -72,6 +77,7 @@
             // Create main object
             var quizData = {
                 quiz_name: $('#quiz_name').val(),
+                user_id: $('#user_id').val(),
                 quiz_category: $('#quiz_category').val(),
                 questions: []
             };

@@ -11,10 +11,11 @@ class CreateQuizModel extends CI_Model
         $this->load->database();
     }
 
-    public function insert_quiz($quiz_name, $quiz_category)
+    public function insert_quiz($quiz_name, $quiz_category,$user_id)
     {
         $data = array(
             'quiz_title' => $quiz_name,
+            'id' => $user_id,
             'categoryId' => $quiz_category,
         );
 
