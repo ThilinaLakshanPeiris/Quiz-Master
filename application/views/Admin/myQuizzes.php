@@ -31,7 +31,7 @@ if ($this->session->flashdata('welcome')) {
                         <div>
                         <h3>Quiz Title: ${quiz.quiz_title}</h3> 
                         <h4>Category: ${quiz.categoryText}</h4>
-                        <a href="${quiz.quizId}">Take Quiz</a>
+                        <a href="${quiz.quizId}">Info</a>
                         </div>
                         `
                     );

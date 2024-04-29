@@ -29,32 +29,68 @@ if ($this->session->flashdata('welcome')) {
 
 <?php include 'includes/footer.php'; ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
 <script>
-    $(document).ready(function() {
-        $.ajax({
-            url: "<?php echo base_url('index.php/LoadQuiz/load_quizzes'); ?>",
-            type: "GET",
-            dataType: "json",
-            success: function(data) {
-                // Handle the response data here
-                console.log(data); // Output the fetched quizzes to the console
-                // Example: Loop through the quizzes and display them on the webpage
-                $.each(data, function(index, quiz) {
-                    $('#quizList').append(
-                        `
-                        <div>
-                        <h3>Quiz Title: ${quiz.quiz_title}</h3> 
-                        <h4>Category: ${quiz.categoryText}</h4>
-                        <a href="<?php echo base_url('index.php/ViewQuiz/view_quizzes/');?>${quiz.quizId}">Take Quiz</a>
-                        </div>
-                        `
-                    );
-                });
-            },
-            error: function(xhr, status, error) {
-                // Handle errors
-                console.error(xhr.responseText);
-            }
-        })
+    // Backbone Model for a Quiz
+    var QuizModel = Backbone.Model.extend({
+        defaults: {
+            quiz_title: '',
+            categoryText: '',
+            quizId: ''
+        }
     });
+
+    // Backbone Collection for Quizzes
+    var QuizCollection = Backbone.Collection.extend({
+        model: QuizModel,
+        url: "<?php echo base_url('index.php/LoadQuiz/load_quizzes'); ?>"
+    });
+
+    // Backbone View for rendering each Quiz item
+    var QuizView = Backbone.View.extend({
+        tagName: 'div',
+        template: _.template(`
+            <div>
+                <h3>Quiz Title: <%= quiz_title %></h3>
+                <h4>Category: <%= categoryText %></h4>
+                <a href="<?php echo base_url('index.php/ViewQuiz/view_quizzes/'); ?><%= quizId %>">Take Quiz</a>
+            </div>
+        `),
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
+    // Backbone View for rendering the Quiz list
+    var QuizListView = Backbone.View.extend({
+        el: '#quizList',
+        initialize: function() {
+            this.collection = new QuizCollection();
+            this.listenTo(this.collection, 'sync', this.render);
+            this.collection.fetch();
+        },
+        render: function() {
+            var self = this;
+            this.collection.each(function(quiz) {
+                var quizView = new QuizView({
+                    model: quiz
+                });
+                self.$el.append(quizView.render().el);
+            });
+            return this;
+        }
+    });
+
+    // Instantiate the QuizListView
+    var quizListView = new QuizListView();
+
+    // Handle form submission
+    $('#searchForm').on('submit', function(e) {
+        e.preventDefault();
+
+    });
+
 </script>
