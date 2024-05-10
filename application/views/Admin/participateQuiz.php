@@ -28,6 +28,7 @@
     <p>No Quiz Data Found!</p>
 <?php endif; ?>
 
+<!-- result modal -->
 <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -49,8 +50,6 @@
 <?php $user_id = (int)$user_id; ?>
 
 <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
-
-<?php include 'includes/footer.php'; ?>
 
 <script>
     $(document).ready(function() {
@@ -139,3 +138,5 @@
         });
     });
 </script>
+
+<?php include 'includes/footer.php'; ?>

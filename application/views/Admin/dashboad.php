@@ -1,33 +1,30 @@
 <?php include 'includes/header.php'; ?>
 
-<?php
-if ($this->session->flashdata('welcome')) {
-    echo "<h3>" . $this->session->flashdata('welcome') . "</h3>";
-} ?>
+<div class="dashboardcontainer">
+    <div class="header mb-3 shadow-sm p-3 rounded-4">
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="quiz_name" class="mb-1">Quiz Name:</label>
+                    <input type="text" class="form-control" id="quiz_name" name="quiz_name">
+                </div>
 
-<h1><?php echo "Welcome " . $this->session->userdata('fname'); ?> </h1>
+                <div class="col-md-4">
+                    <label for="category" class="mb-1">Category:</label>
+                    <select id="quiz_category" class="form-control" name="category">
+                    </select>
+                </div>
 
-<form action="" method="get">
-    <label for="quiz_name">Quiz Name:</label>
-    <input type="text" id="quiz_name" name="quiz_name">
-
-    <label for="category">Category:</label>
-    <select id="category" name="category">
-        <option value="category1">Category 1</option>
-        <option value="category2">Category 2</option>
-        <option value="category3">Category 3</option>
-        <option value="category1">Category 4</option>
-        <option value="category2">Category 5</option>
-        <option value="category3">Category 6</option>
-
-    </select>
-
-    <input type="submit" value="Search">
-</form>
-
-<div id="quizList"></div>
-
-<?php include 'includes/footer.php'; ?>
+                <div class="col-md-4">
+                    <input type="submit" class="search fs-5 d-grid col-6 mx-auto rounded-4" value="Search">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="quizzes">
+        <div id="quizList"></div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
@@ -52,10 +49,12 @@ if ($this->session->flashdata('welcome')) {
     var QuizView = Backbone.View.extend({
         tagName: 'div',
         template: _.template(`
-            <div>
-                <h3>Quiz Title: <%= quiz_title %></h3>
-                <h4>Category: <%= categoryText %></h4>
-                <a href="<?php echo base_url('index.php/ViewQuiz/view_quizzes/'); ?><%= quizId %>">Take Quiz</a>
+            <div class="recent row shadow rounded-pill">
+                <div class="col-md-9">
+                    <div><h5>Quiz Title: <%= quiz_title %></h5></div>
+                    <div><h6>Category: <%= categoryText %></h6></div>
+                </div>
+                <div class="col-md-3 my-auto"><a href="<?php echo base_url('index.php/ViewQuiz/view_quizzes/'); ?><%= quizId %>"><button class= "btn btn-primary  mx-auto" id="takequiz">Take Quiz</button></a></div>
             </div>
         `),
         render: function() {
@@ -63,6 +62,9 @@ if ($this->session->flashdata('welcome')) {
             return this;
         }
     });
+
+    // <div class = "col-md-6"><h5>Quiz Title: <%= quiz_title %></h5></div>
+    //                 <div class = "col-md-4"> <h6>Category: <%= categoryText %></h6></div>
 
     // Backbone View for rendering the Quiz list
     var QuizListView = Backbone.View.extend({
@@ -90,7 +92,6 @@ if ($this->session->flashdata('welcome')) {
     // Handle form submission
     $('#searchForm').on('submit', function(e) {
         e.preventDefault();
-
+        // Your form submission logic here
     });
-
 </script>
