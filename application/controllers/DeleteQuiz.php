@@ -8,22 +8,20 @@ class DeleteQuiz extends CI_Controller
     {
         parent::__construct();
         // Load necessary libraries and models here
-        $this->load->model('viewQuizModel');
-        $this->load->model('deleteQuizModel');
+        $this->load->model('viewQuizModel'); // Load model for viewing quizzes (not used in this controller)
+        $this->load->model('deleteQuizModel'); // Load model for deleting quizzes
     }
 
+    // Method to delete a quiz by its ID
     public function delete_quiz($quizId)
     {
-        // $quiz = $this->viewQuizModel->get_complete_quiz($quizId);
-
-        // $data['quiz'] = $quiz;
-        // $this->load->view('Admin/editQuiz', $data);
+        // Call the delete_quiz method from the deleteQuizModel to delete the quiz
         $deleted = $this->deleteQuizModel->delete_quiz($quizId);
 
+        // Check if the quiz was successfully deleted
         if($deleted) {
             echo json_encode("Quiz deleted successfully");
-        }
-        else {
+        } else {
             echo json_encode("Error");
         }
     }

@@ -1,15 +1,16 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Register extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
+        // Load form validation library
         $this->load->library('form_validation');
     }
 
-
+    // Method to handle user registration
     public function RegisterUser()
     {
         // Set up form validation rules
@@ -19,26 +20,22 @@ class Register extends CI_Controller
         $this->form_validation->set_rules('password', 'Password', 'required');
         $this->form_validation->set_rules('conpassword', 'Confirm Password', 'required|matches[password]');
 
-
         // Run form validation
         if ($this->form_validation->run() == FALSE) {
-            // Validation failed, show form again with validation errors
-            // You can load a view to display the form with errors here
+            // Validation failed, show registration form again with validation errors
             $this->load->view('register');
-            //echo "Validation failed!";
         } else {
-            // Validation passed, process the form submission
-            // You can access form data using $this->input->post() method
-            // Example: $fname = $this->input->post('fname');
-            // Here, you can process user registration, save data to database, etc.
-            //echo "Validation passed!";
-            //die();
-            $this->load->model('Model_user');
-            $response = $this->Model_user->InsertUserData();
+            // Validation passed, process the registration
+            $this->load->model('Model_user'); // Load model for user operations
+            $response = $this->Model_user->InsertUserData(); // Call method to insert user data
+
+            // Check registration response
             if ($response) {
-                $this->session->set_flashdata('msg', 'Successfuly Registerd. Please Login.');
+                // If registration successful, set flash message and redirect to login page
+                $this->session->set_flashdata('msg', 'Successfully Registered. Please Login.');
                 redirect('Home/login');
             } else {
+                // If registration failed, set flash message and redirect back to registration page
                 $this->session->set_flashdata('msg', 'Something went wrong!');
                 redirect('Home/register');
             }
